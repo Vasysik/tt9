@@ -1,12 +1,12 @@
 package io.github.sspanak.tt9.ime;
 
+import android.content.res.Configuration;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.github.sspanak.tt9.ime.helpers.OrientationListener;
 import io.github.sspanak.tt9.ime.modes.InputMode;
 import io.github.sspanak.tt9.ime.helpers.TextSelection;
 import io.github.sspanak.tt9.ime.modes.InputModeKind;
@@ -20,21 +20,15 @@ import io.github.sspanak.tt9.util.sys.DeviceInfo;
  * Informational methods for the on-screen keyboard
  **/
 abstract public class MainViewHandler extends HotkeyHandler {
-	OrientationListener orientationListener;
-
 	private float normalizedWidth = -1;
 	private float normalizedHeight = -1;
 	private int width = 0;
 
 
 	@Override
-	protected void onInit() {
-		super.onInit();
-
-		if (orientationListener == null) {
-			orientationListener = new OrientationListener(this, this::onOrientationChanged);
-			orientationListener.start();
-		}
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		onOrientationChanged();
 	}
 
 
@@ -86,10 +80,6 @@ abstract public class MainViewHandler extends HotkeyHandler {
 
 
 	protected void cleanUp() {
-		if (orientationListener != null) {
-			orientationListener.stop();
-			orientationListener = null;
-		}
 		if (mainView != null) {
 			mainView.destroy();
 		}
